@@ -17,6 +17,7 @@ var defaults = {
   s: 2,
   r: 30,
   c: 0.01,
+  lerp: 0.01,
   dur: 0.1
 };
 
@@ -27,6 +28,8 @@ function Adsr(opts){
   merge(env, opts);
   
   var circ = end;
+  var curr = 0;
+  var next = 0;
   var pos = 0;
   var p = 0;
   var v = 0;
@@ -36,7 +39,9 @@ function Adsr(opts){
   return run;
   
   function run(t){
-    return circ(t) / 10;
+    next = circ(t) / 10;
+    curr = curr + (next - curr) * env.lerp;
+    return curr;
   }
   
   function play(t, _env){
